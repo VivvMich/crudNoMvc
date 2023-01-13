@@ -48,7 +48,7 @@ class BDD
 
         $tableName = strtolower($ref->getShortName());
         // Création dynamique du SQL
-        $sql = "UPDATE $tableName SET ";
+        $sql = "UPDATE $tableName SET "; // UDPATE user SET
 
         $properties  = $ref->getProperties();
 
@@ -56,10 +56,10 @@ class BDD
         foreach ($properties as $property){
 
             if ($property->getName() !== "id" ){
-                $sql .= $property->getName() . "=?, ";
+                $sql .= $property->getName() . "=?, ";  //  UPDATE user SET username=?, paswword=?, etc...
 
                 // Tableau de données
-                $method = 'get' . ucfirst($property->getName());
+                $method = 'get' . ucfirst($property->getName()); // getUsername... getPassword... ect ..
 
                 if (method_exists($obj, $method)){
                     $CheckData = $obj->$method();
@@ -68,23 +68,23 @@ class BDD
                         $data[] = $CheckData;
                     }
                     else{
-                        $data[] = $CheckData;
+                        $data[] = $CheckData; // Patrick, etc
                     }
                 }
             }
         }
         $data[] = $id;
         $sql = substr($sql,0,-2 ); // J'enlève la dernière virgule avant le WHERE.
-        $sql .= " WHERE id=?";
+        $sql .= " WHERE id=?"; // UPDATE user SET username=?, paswword=?, etc... WHERE id=?
         $req = BDD::$pdo->prepare($sql);
         if($req->execute($data)){
             $message = "Enregistrement réusis.";
-            header("Location:http://localhost/crudpoo/POO/?succes=$message");
+            header("Location:http://localhost/crud/crudNoMvc/?succes=$message");
             exit;
         }
         else{
             $message = "Erreur pendant l'enregistrement";
-            header("Location:http://localhost/crudpoo/POO/?error=$message");
+            header("Location:http://localhost/crud/crudNoMvc/?error=$message");
             exit;
         }
 
@@ -93,24 +93,24 @@ class BDD
     public function insert($obj)
     {
 
-        $ref = new \ReflectionClass($obj);
-        $data = [];
+        $ref = new \ReflectionClass($obj); // Ca me retourne un objet qui contient l'objet injecté et me permettra d'avoir des informations sur celui-ci.
+        $data = []; // tableau qui contiendra les valeur des getters de l'objet qui est injecter dans la methode insert ( cela n'a rien avoir avec le reflection class )
         $valueString = "(";
 
-        $tableName = strtolower($ref->getShortName());
+        $tableName = strtolower($ref->getShortName()); // USER devient user
         // Création dynamique du SQL
-        $sql = "INSERT INTO $tableName (";
-        $properties = $ref->getProperties();
+        $sql = "INSERT INTO $tableName ("; // INSERT INTO user (
+        $properties = $ref->getProperties(); // retourne le tableau de toutes les propriétés de User ( exemple : username, password etc .. )
         foreach ($properties as $property) {
             if ( $property->getName() != 'id') {
-                $sql .= $property->getName() . ",";
-                $valueString .= "?,";
+                $sql .= $property->getName() . ","; // username, password, ect...
+                $valueString .= "?,"; // (?,?, ect ...
 
                 // Tableau de données
-                $method = 'get' . ucfirst($property->getName());
+                $method = 'get' . ucfirst($property->getName()); // get . ucfirst(username)  =>  get . Username => getUsername
 
                 if (method_exists($obj, $method)) {
-                    $CheckData = $obj->$method();
+                    $CheckData = $obj->$method(); // getUsername();
                     if (is_array($CheckData)){
                         $CheckData = implode(",", $CheckData );
                         $data[] = $CheckData;
@@ -121,18 +121,27 @@ class BDD
                 }
             }
         }
-        $valueString = substr_replace($valueString, ')', -1); // Je remplace la dernière par ) pour fermer.
+
+        // INSERT INTO user (username, password, job, $country, sex, language, leisure,
         $sql = substr_replace($sql, ')', -1); // Je remplace la dernière par ) pour fermer.
+        // INSERT INTO user (username, password, job, $country, sex, language, leisure)
+
+        //  // (?,?,?,?,?,?,?,
+        $valueString = substr_replace($valueString, ')', -1); // Je remplace la dernière par ) pour fermer.
+        // (?,?,?,?,?,?,?)
+
+
         $sql .= " VALUE " . $valueString;
+        // INSERT INTO user (username, password, job, $country, sex, language, leisure) VALUE (?,?,?,?,?,?,?)
         $req = BDD::$pdo->prepare($sql);
         if($req->execute($data)){
             $message = "Enregistrement réusis.";
-            header("Location:http://localhost/crudpoo/POO/?succes=$message");
+            header("Location:http://localhost/crud/crudNoMvc/?succes=$message");
             exit;
         }
         else{
             $message = "Erreur pendant l'enregistrement";
-            header("Location:http://localhost/crudpoo/POO/?error=$message");
+            header("Location:http://localhost/crud/crudNoMvc/?error=$message");
             exit;
         }
     }

@@ -16,20 +16,21 @@ class User
     public function createUserToForm(array $array, string $verb){
         foreach ($array as $key => $value) {
             if (!empty($value)){
-                $method = 'set' . ucfirst($key);
+                $method = 'set' . ucfirst($key); // username => Usename => setUsername  ( $_Post["username"] = "patrick" )
                 if (method_exists($this, $method)) {
                     if (is_array($value)){
                         $value = implode(",", $value );
                         $this->$method($value);
                     }
                     else{
-                        $this->$method($value);
+                        $this->$method($value); // $this->setUsername("Patrick") // EN PHP on peut appeller une method
+                        // à partir d'une string.
                     }
                 }
             }
             else{
                 $message = "Formulaire incomplet";
-                header("Location:http://localhost/crudpoo/POO/?crud=$verb&error=$message");
+                header("Location:http://localhost/crud/crudNoMvc/?crud=$verb&error=$message");
                 exit;
             }
         }

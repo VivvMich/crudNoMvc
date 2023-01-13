@@ -33,10 +33,6 @@ if (isset($_POST["verb"]))
     }
 }
 
-
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -59,8 +55,6 @@ if (isset($_POST["verb"]))
         </ul>
     </nav>
 
-
-
     <?php
 
         if ( isset($_GET['error'])){
@@ -73,15 +67,12 @@ if (isset($_POST["verb"]))
         echo "<h2 class='text-success text-center'>$message</h2>";
     }
 
-
-
-
     if(isset($_GET['crud'])){
 
         if ($_GET["crud"] === "create"){
             $form->createForm("", "post", "container");
             $form->createInput("Nom d'utilisateur ", "text", "", "form-control", "username", "form-label");
-            $form->createInput("Mot de passe ", "text", "", "form-control", "password", "form-label");
+            $form->createInput("Mot de passe ", "password", "", "form-control", "password", "form-label");
             $form->createSelect("Profession ", "", $jobArray, "form-control", "job", "form-label", true);
             $form->createSelect("Pays", "", $countryArray, "form-control", "country", "form-label");
             $form->createDoubleRadio("M", "F", "", "M", "F", "form-check-input", "form-check-label", "sex");
@@ -93,6 +84,7 @@ if (isset($_POST["verb"]))
 
         if ($_GET["crud"] === "update" && isset($_GET["id"])){
             $user = $bdd->select('user', $_GET["id"]);
+
             $form->createForm("", "post", "container");
             $form->createInput("Nom d'utilisateur ", "text", $user->getUsername(), "form-control", "username", "form-label");
             $form->createInput("Mot de passe ", "text", $user->getPassword(), "form-control", "password", "form-label");
@@ -116,8 +108,10 @@ if (isset($_POST["verb"]))
             Table::drawTable($users);
         }
 
-
-
+//        if($_GET["crud"] !== "read" || $_GET["crud"] !== "create" || $_GET["crud"] !== "update" || $_GET["crud"] !== "delete"){
+//
+//            header("Location:error404.html");
+//        }
     }
     ?>
 

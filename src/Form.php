@@ -42,17 +42,15 @@ class Form
 
     public function createSelect(string $inputName, string $value, array $entitiesValues, string $class, string $name, string $labelClass, bool $isSized = false  ){
 
-        $size= count($entitiesValues);
-
         if ($this->isFormed){
             $this->formString .= "<label class='$labelClass' for='$name'>$inputName</label>";
             if ($isSized){
+                $size= count($entitiesValues);
                 $this->formString .= "<select class='$class' name='$name' size='$size'>";
             }
             else{
                 $this->formString .= "<select class='$class' name='$name'>";
             }
-
                 foreach ($entitiesValues as $entitiesValue) {
                     if ($value !== $entitiesValue) {
                         $this->formString .= "<option value='$entitiesValue'>$entitiesValue</option>";
@@ -118,7 +116,7 @@ class Form
     public function createSubmit(string $divClass, string $buttonClass, string $submitValue){
         if ($this->isFormed) {
 
-            $this->formString .= "<div class='$divClass'><button class='$buttonClass' type='submit'>$submitValue</button></div></div>";
+            $this->formString .= "<div class='$divClass'><button class='$buttonClass' type='submit'>$submitValue</button></div></div></form>";
         }
         else {
             throw new \Exception("Il faut lancer la methode createForm() avant de créer quoique ce soit !");

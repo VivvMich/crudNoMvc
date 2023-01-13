@@ -4,12 +4,12 @@ namespace App\Crud;
 
 class Table
 {
-    public static function drawTable($objects){
+    public static function drawTable(array $objects){ // Tableau d'objets pour ce cas un tableau de User
         $table = '';
         $head = '';
         $rows = '';
 
-        $ref = new \ReflectionClass($objects[0]);
+        $ref = new \ReflectionClass($objects[0]);// pour avoir les propriétés par exemple de User, je prends le premier du tableau d'objet
         $properties = $ref->getProperties();
 
         foreach ($properties as $property) {
